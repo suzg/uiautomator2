@@ -1312,6 +1312,8 @@ class _Device(_BaseClient):
     def __call__(self, **kwargs):
         return UiObject(self, Selector(**kwargs))
 
+    def is_locked(self):
+        return self.shell("dumpsys window | grep mDreamingLockscreen").output.strip().endswith("mDreamingLockscreen=true")
 
 class _AppMixIn:
     def _pidof_app(self, package_name):
