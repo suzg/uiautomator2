@@ -100,11 +100,11 @@ class TimeoutRequestsSession(requests.Session):
         # self.mount("https://", adapter)
 
     def request(self, method, url, **kwargs):
-        # Init timeout and set connect-timeout to 3s
+        # Init timeout and set connect-timeout to 10s
         if 'timeout' not in kwargs:
-            kwargs['timeout'] = (3, HTTP_TIMEOUT)
+            kwargs['timeout'] = (10, HTTP_TIMEOUT)
         if isinstance(kwargs['timeout'], (int, float)):
-            kwargs['timeout'] = (3, kwargs['timeout'])
+            kwargs['timeout'] = (10, kwargs['timeout'])
 
         verbose = hasattr(self, 'debug') and self.debug
         if verbose:
