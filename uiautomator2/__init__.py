@@ -100,11 +100,18 @@ class TimeoutRequestsSession(requests.Session):
         # self.mount("https://", adapter)
 
     def request(self, method, url, **kwargs):
-        # Init timeout and set connect-timeout to 10s
+        try:
+            files = kwargs['files']
+            src = files['file']
+            filesize = os.path.getsize(src.name) / 1000000
+        except (KeyError, AttributeError):
+            filesize = 0
+        add_time = int(filesize) // 10 + 1
+        # Init timeout and set connect-timeout to 5 + add_time（10M/s）
         if 'timeout' not in kwargs:
-            kwargs['timeout'] = (10, HTTP_TIMEOUT)
+            kwargs['timeout'] = (5 + add_time, HTTP_TIMEOUT)
         if isinstance(kwargs['timeout'], (int, float)):
-            kwargs['timeout'] = (10, kwargs['timeout'])
+            kwargs['timeout'] = (5 + add_time, kwargs['timeout'])
 
         verbose = hasattr(self, 'debug') and self.debug
         if verbose:
